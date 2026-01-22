@@ -68,6 +68,13 @@ namespace Microsoft.Extensions.Configuration.AzureAppConfiguration.FeatureManage
                 return true;
             }
 
+            // Check for feature flag key prefix as an additional safety measure
+            // This handles edge cases where settings might have the prefix but not the SDK type
+            if (setting.Key.StartsWith(FeatureManagementConstants.FeatureFlagMarker))
+            {
+                return true;
+            }
+
             // Fallback to content type checking for compatibility with test scenarios 
             // where base ConfigurationSetting objects are created with feature flag content type
             return setting.ContentType.TryParseContentType(out ContentType contentType) &&
