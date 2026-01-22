@@ -82,6 +82,15 @@ namespace Microsoft.Extensions.Configuration.AzureAppConfiguration.AzureKeyVault
                 return false;
             }
 
+            // Use SDK type checking - this is the primary and preferred method
+            // The SDK returns SecretReferenceConfigurationSetting when fetching from the service
+            if (setting is SecretReferenceConfigurationSetting)
+            {
+                return true;
+            }
+
+            // Fallback to content type checking for compatibility with test scenarios
+            // where base ConfigurationSetting objects are created with secret reference content type
             return setting.ContentType.TryParseContentType(out ContentType contentType)
                 && contentType.IsKeyVaultReference();
         }
