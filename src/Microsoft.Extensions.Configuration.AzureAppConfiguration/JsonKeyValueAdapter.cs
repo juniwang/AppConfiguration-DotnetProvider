@@ -56,8 +56,17 @@ namespace Microsoft.Extensions.Configuration.AzureAppConfiguration
                 return false;
             }
 
+            // Primary method: Use SDK type checking to exclude special configuration setting types
+            // The SDK returns FeatureFlagConfigurationSetting and SecretReferenceConfigurationSetting
+            if (setting is FeatureFlagConfigurationSetting || setting is SecretReferenceConfigurationSetting)
+            {
+                return false;
+            }
+
             if (setting.ContentType.TryParseContentType(out ContentType contentType))
             {
+                // Secondary check: Content type validation with exclusions
+                // Needed for backward compatibility with test scenarios using base ConfigurationSetting types
                 return contentType.IsJson() &&
                     !contentType.IsFeatureFlag() &&
                     !contentType.IsKeyVaultReference();
