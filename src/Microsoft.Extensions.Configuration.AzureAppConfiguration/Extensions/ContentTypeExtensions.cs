@@ -72,11 +72,34 @@ namespace Microsoft.Extensions.Configuration.AzureAppConfiguration.Extensions
             return false;
         }
 
+        /// <summary>
+        /// Checks if the content type indicates a feature flag configuration setting.
+        /// </summary>
+        /// <param name="contentType">The content type to check.</param>
+        /// <returns>True if the content type matches feature flag format; otherwise, false.</returns>
+        /// <remarks>
+        /// This method checks content type strings directly and is used when:
+        /// - Working with ContentType objects rather than ConfigurationSetting objects
+        /// - Backward compatibility with test scenarios using base ConfigurationSetting types
+        /// For ConfigurationSetting objects, prefer using: setting is FeatureFlagConfigurationSetting
+        /// </remarks>
         public static bool IsFeatureFlag(this ContentType contentType)
         {
             return contentType.MediaType.Equals(FeatureManagementConstants.ContentType);
         }
 
+        /// <summary>
+        /// Checks if the content type indicates a Key Vault secret reference configuration setting.
+        /// </summary>
+        /// <param name="contentType">The content type to check.</param>
+        /// <returns>True if the content type matches Key Vault reference format; otherwise, false.</returns>
+        /// <remarks>
+        /// This method checks content type strings directly and is used when:
+        /// - Working with ContentType objects rather than ConfigurationSetting objects
+        /// - Backward compatibility with test scenarios using base ConfigurationSetting types
+        /// - Filtering by content type in scenarios like AI content detection
+        /// For ConfigurationSetting objects, prefer using: setting is SecretReferenceConfigurationSetting
+        /// </remarks>
         public static bool IsKeyVaultReference(this ContentType contentType)
         {
             return contentType.MediaType.Equals(KeyVaultConstants.ContentType);
